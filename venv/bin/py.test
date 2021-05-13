@@ -1,4 +1,4 @@
-#!/home/oem/Code/python/ui-tests-example/venv/bin/python
+#!/Users/rafa/Documents/Rimma/ui-tests-example/venv/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys

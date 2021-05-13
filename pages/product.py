@@ -1,274 +1,70 @@
 #!/usr/bin/python3
 # -*- encoding=utf8 -*-
-import time
+from pages.base import WebPage
+from pages.elements import WebElement, ManyWebElements
 
-from pages.product import MainPageWildberries
 
+class MainPageWildberries(WebPage):
 
-def test_check_search(web_browser):
-    page = MainPageWildberries(web_browser)
+    def __init__(self, web_driver, url=''):
+        if not url:
+            url = 'https://wildberries.ru'
 
-    page.search = 'кроссовки adidas'
-    page.search_button.click()
-    assert 'кроссовки adidas' in page.search_title.get_text().lower()
+            super().__init__(web_driver, url)
 
-    for title in page.product_titles.get_text():
-        assert 'adidas' in title.lower()
+    search = WebElement(xpath='//body/div[1]/header[1]/div[1]/div[2]/div[3]/div[1]/input[1]')
 
+    search_button = WebElement(xpath='//body/div[1]/header[1]/div[1]/div[2]/div[3]/div[1]/div[2]/button[2]')
 
-def test_check_search_product_cnt(web_browser):
-    page = MainPageWildberries(web_browser)
+    search_title = WebElement(xpath='//*[@id="catalog"]/div[1]/div[1]/h1[1]')
 
-    page.search = 'кроссовки adidas'
-    page.search_button.click()
-    assert page.product_titles.count() == 100
+    product_titles = ManyWebElements(xpath='//*[@id="catalog-content"]/div[4]/div[7]/div[1]/span[1]/span[1]/span['
+                                           '1]/a[1]/div[2]/div[3]')
 
+    # todo: неправильно прописан  xpath
+    product = WebElement(xpath='//*[@id="c7004000"]/img[1]')
 
-def test_check_product_card(web_browser):
-    page = MainPageWildberries(web_browser)
+    product_price = ManyWebElements(
+        xpath='//*[@id="catalog-content"]/div[4]/div[1]/div[1]/span[1]/span[1]/span[1]/a[1]/div[2]/div[2]/span['
+              '1]/ins[1]')
 
-    page.search = 'кроссовки adidas'
-    page.search_button.click()
-    assert 'кроссовки adidas' in page.search_title.get_text().lower()
+    product_rating = ManyWebElements(
+        xpath='//*[@id="catalog-content"]/div[4]/div[1]/div[1]/span[1]/span[1]/span[1]/a[1]/span[1]/span[1]/span[2]')
 
-    page.product.click()
+    product_discounts = ManyWebElements(
+        xpath='//*[@id="catalog-content"]/div[4]/div[1]/div[1]/span[1]/span[1]/span[1]/a[1]/div[2]/div[2]/span[1]/span[1]/span[1]')
 
+    product_price_discount = ManyWebElements(
+        xpath='//*[@id="catalog-content"]/div[4]/div[1]/div[1]/span[1]/span[1]/span[1]/a[1]/div[2]/div[2]/span[1]/span[1]/del[1]')
 
-def test_check_product_price(web_browser):
-    page = MainPageWildberries(web_browser)
+    discount_button_10 = WebElement(xpath='//*[@id="filterPanelLeft"]/div[2]/div[2]/div[1]/div[1]/fieldset[1]/label[1]')
 
-    page.search = 'кроссовки adidas'
-    page.search_button.click()
-    assert 'кроссовки adidas' in page.search_title.get_text().lower()
+    discount_button_30 = WebElement(xpath='//*[@id="filterPanelLeft"]/div[2]/div[2]/div[1]/div[1]/fieldset[1]/label[2]')
 
-    for price in page.product_price.get_text():
-        assert price != ""
+    discount_button_50 = WebElement(xpath='//*[@id="filterPanelLeft"]/div[2]/div[2]/div[1]/div[1]/fieldset[1]/label[3]')
 
+    breadcrumbs = ManyWebElements(xpath='//*[@id="catalog-content"]/div[2]/ul[1]/li[1]')
 
-# # проверка рейтинга товара положительный
-def test_check_rating(web_browser):
-    page = MainPageWildberries(web_browser)
+    product_card_title = WebElement(xpath='//*[@id="container"]/div[1]/div[2]/div[1]/div[1]')
 
-    page.search = 'кроссовки adidas'
-    page.search_button.click()
-    assert 'кроссовки adidas' in page.search_title.get_text().lower()
+    product_card_price = WebElement(
+        xpath='//*[@id="container"]/div[1]/div[2]/div[4]/div[2]/div[1]/div[1]/div[1]/span[1]')
 
-    for rating in page.product_rating.get_text():
-        assert rating != ""
+    product_card_articul = WebElement(xpath='//*[@id="container"]/div[1]/div[2]/div[2]/div[1]/span[1]')
 
+    product_card_description = WebElement(xpath='//*[@id="container"]/div[1]/div[3]/div[1]/div[1]/div[2]/div[1]/h1[1]')
 
-# # проверка рейтинга товара негативный
-def test_check_rating_fail(web_browser):
-    page = MainPageWildberries(web_browser)
+    product_card_composition = WebElement(xpath='//*[@id="container"]/div[1]/div[3]/div[1]/div[1]/div[1]/div[1]/h1[1]')
 
-    page.search = 'кроссовки adidas'
-    page.search_button.click()
-    assert 'кроссовки adidas' in page.search_title.get_text().lower()
+    product_card_seller = WebElement(xpath='//*[@id="Comments"]/div[1]/div[1]/div[3]/div[2]')
 
-    for rating in page.product_rating.get_text():
-        assert rating == ""
+    product_card_fast_view_detail_but = WebElement(xpath='//*[@id="container"]/div[3]/a[1]')
 
+    product_card_size_title = WebElement(xpath='//*[@id="container"]/div[1]/div[2]/div[4]/div[7]/div[1]/p[1]')
+    product_card_size = ManyWebElements(xpath='//*[@id="container"]/div[1]/div[2]/div[4]/div[7]/div[2]/label[1]')
+    product_description_maximize = WebElement(xpath='//*[@id="container"]/div[1]/div[3]/div[1]/div[1]/div[2]/div[2]/div[2]/div[1]/div[1]')
 
-# проверка скидочной цены, если есть скидка
-def test_discount_price_exist(web_browser):
-    page = MainPageWildberries(web_browser)
-    page.search = 'кроссовки adidas'
-    page.search_button.click()
-    assert 'кроссовки adidas' in page.search_title.get_text().lower()
+    product_description_minimize = WebElement(xpath='//*[@id="container"]/div[1]/div[3]/div[1]/div[1]/div[2]/div[2]/div[2]/div[1]/div[1]')
 
-    product_discount = page.product_discount.get_text()
-    if product_discount != "":
-        product_price_discount = page.product_price_discount.get_text()
-        assert product_price_discount != ""
-
-def test_discount_price_exist(web_browser):
-    page = MainPageWildberries(web_browser)
-    page.search = 'кроссовки adidas'
-    page.search_button.click()
-    assert 'кроссовки adidas' in page.search_title.get_text().lower()
-
-    product_discount = page.product_discount.get_text()
-    if product_discount != "":
-        product_price_discount = page.product_price_discount.get_text()
-        assert product_price_discount == ""
-
-# z проверка товаров со скидкой больше 10%
-def test_10_discount_percent_click(web_browser):
-    page = MainPageWildberries(web_browser)
-    page.search = 'кроссовки adidas'
-    page.search_button.click()
-    assert 'кроссовки adidas' in page.search_title.get_text().lower()
-
-    page.discount_button_10.click()
-
-    for product_discount in page.product_discounts.get_text():
-        if product_discount != "":
-            # -43
-            replaced_disc = product_discount.replace("-", "")
-            replaced_disc = replaced_disc.replace("%", "")
-            assert int(replaced_disc) >= 8
-
-
-def test_10_discount_percent_click_err(web_browser):
-    page = MainPageWildberries(web_browser)
-    page.search = 'кроссовки adidas'
-    page.search_button.click()
-    assert 'кроссовки adidas' in page.search_title.get_text().lower()
-
-    page.discount_button_10.click()
-
-    for product_discount in page.product_discounts.get_text():
-        if product_discount != "":
-            # -43
-            replaced_disc = product_discount.replace("-", "")
-            replaced_disc = replaced_disc.replace("%", "")
-            assert int(replaced_disc) < 8
-
-
-# # z проверка товаров со скидкой больше 30%
-def test_30_discount_percent_click(web_browser):
-    page = MainPageWildberries(web_browser)
-    page.search = 'кроссовки adidas'
-    page.search_button.click()
-    assert 'кроссовки adidas' in page.search_title.get_text().lower()
-
-    page.discount_button_30.click()
-
-    for product_discount in page.product_discounts.get_text():
-        if product_discount != "":
-            # -43
-            replaced_disc = product_discount.replace("-", "")
-            replaced_disc = replaced_disc.replace("%", "")
-            assert int(replaced_disc) >= 28
-
-
-def test_30_discount_percent_click_err(web_browser):
-    page = MainPageWildberries(web_browser)
-    page.search = 'кроссовки adidas'
-    page.search_button.click()
-    assert 'кроссовки adidas' in page.search_title.get_text().lower()
-
-    page.discount_button_30.click()
-
-    for product_discount in page.product_discounts.get_text():
-        if product_discount != "":
-            # -43
-            replaced_disc = product_discount.replace("-", "")
-            replaced_disc = replaced_disc.replace("%", "")
-            assert int(replaced_disc) < 28
-
-
-# z проверка товаров со скидкой больше 50%
-def test_50_discount_percent_click(web_browser):
-    page = MainPageWildberries(web_browser)
-    page.search = 'кроссовки adidas'
-    page.search_button.click()
-    assert 'кроссовки adidas' in page.search_title.get_text().lower()
-
-    page.discount_button_50.click()
-
-    time.sleep(2)
-
-    for product_discount in page.product_discounts.get_text():
-        if product_discount != "":
-            # -43
-            replaced_disc = product_discount.replace("-", "")
-            replaced_disc = replaced_disc.replace("%", "")
-            assert int(replaced_disc) >= 49
-
-
-# z проверка товаров со скидкой больше 50%
-def test_50_discount_percent_click_err(web_browser):
-    page = MainPageWildberries(web_browser)
-    page.search = 'кроссовки adidas'
-    page.search_button.click()
-    assert 'кроссовки adidas' in page.search_title.get_text().lower()
-
-    page.discount_button_50.click()
-
-    time.sleep(2)
-
-    for product_discount in page.product_discounts.get_text():
-        if product_discount != "":
-            # -43
-            replaced_disc = product_discount.replace("-", "")
-            replaced_disc = replaced_disc.replace("%", "")
-            assert int(replaced_disc) < 49
-
-
-# проверка появление выбранного фильтра над карточками
-def test_50_discount_breadcrumb_onclick(web_browser):
-    page = MainPageWildberries(web_browser)
-    page.search = 'кроссовки adidas'
-    page.search_button.click()
-    assert 'кроссовки adidas' in page.search_title.get_text().lower()
-
-    page.discount_button_50.click()
-    time.sleep(2)
-
-    for breadcrumb in page.breadcrumbs.get_text():
-        assert breadcrumb == 'от 50% и выше'
-
-
-def test_50_discount_breadcrumb_onclick_err(web_browser):
-    page = MainPageWildberries(web_browser)
-    page.search = 'кроссовки adidas'
-    page.search_button.click()
-    assert 'кроссовки adidas' in page.search_title.get_text().lower()
-    page.discount_button_50.click()
-    time.sleep(2)
-
-    for breadcrumb in page.breadcrumbs.get_text():
-        assert breadcrumb != 'от 50% и выше'
-
-
-def test_10_discount_breadcrumb_onclick(web_browser):
-    page = MainPageWildberries(web_browser)
-    page.search = 'кроссовки adidas'
-    page.search_button.click()
-    assert 'кроссовки adidas' in page.search_title.get_text().lower()
-
-    page.discount_button_10.click()
-    time.sleep(2)
-
-    for breadcrumb in page.breadcrumbs.get_text():
-        assert breadcrumb == 'от 10% и выше'
-
-
-def test_30_discount_breadcrumb_onclick(web_browser):
-    page = MainPageWildberries(web_browser)
-    page.search = 'кроссовки adidas'
-    page.search_button.click()
-    assert 'кроссовки adidas' in page.search_title.get_text().lower()
-
-    page.discount_button_30.click()
-    time.sleep(2)
-
-    for breadcrumb in page.breadcrumbs.get_text():
-        assert breadcrumb == 'от 30% и выше'
-
-
-def test_10_discount_breadcrumb_onclick_err(web_browser):
-    page = MainPageWildberries(web_browser)
-    page.search = 'кроссовки adidas'
-    page.search_button.click()
-    assert 'кроссовки adidas' in page.search_title.get_text().lower()
-
-    page.discount_button_10.click()
-    time.sleep(2)
-
-    for breadcrumb in page.breadcrumbs.get_text():
-        assert breadcrumb != 'от 10% и выше'
-
-
-def test_30_discount_breadcrumb_onclick_err(web_browser):
-    page = MainPageWildberries(web_browser)
-    page.search = 'кроссовки adidas'
-    page.search_button.click()
-    assert 'кроссовки adidas' in page.search_title.get_text().lower()
-
-    page.discount_button_30.click()
-    time.sleep(2)
-
-    for breadcrumb in page.breadcrumbs.get_text():
-        assert breadcrumb != 'от 30% и выше'
+    product_comment_rules_but = WebElement(xpath='//*[@id="container"]/div[3]/a[1]')
+    product_comment_rules_desc = WebElement(xpath='body/div[1]/p[1]/h4[1]')

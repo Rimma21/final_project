@@ -1,9 +1,20 @@
-from pages.basket import Basket
+#!/usr/bin/python3
+# -*- encoding=utf8 -*-
+from pages.base import WebPage
+from pages.elements import WebElement
 
 
-def test_check_auth_form_exist(web_browser):
-    page = Basket(web_browser)
-    page.basket.click()
-    assert page.empty_basket.get_text() == 'В вашей корзине пока ничего нет'
+class Basket(WebPage):
+    def __init__(self, web_driver, url=''):
+        if not url:
+            url = 'https://wildberries.ru'
 
-# def test_basket_is_not_empty(web_browser):
+            super().__init__(web_driver, url)
+
+    basket = WebElement(xpath='//*[@id="basketContent"]/div[3]/a[1]')
+    empty_basket = WebElement(xpath='//*[@id="app"]/div[1]/div[1]/div[1]/div[1]/h3[1]')
+
+
+
+
+

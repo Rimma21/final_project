@@ -29,7 +29,7 @@ end
 # unset irrelevant variables
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV "/home/oem/Code/python/ui-tests-example/venv"
+set -gx VIRTUAL_ENV "/Users/rafa/Documents/Rimma/ui-tests-example/venv"
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/bin" $PATH

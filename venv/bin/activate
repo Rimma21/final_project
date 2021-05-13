@@ -37,7 +37,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="/home/oem/Code/python/ui-tests-example/venv"
+VIRTUAL_ENV="/Users/rafa/Documents/Rimma/ui-tests-example/venv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"
