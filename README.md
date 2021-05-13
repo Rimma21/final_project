@@ -1,11 +1,7 @@
 Introduction
 ------------
 
-This repository contains basic example of usage PageObject
-patter with Selenium and Python (PyTest + Selenium).
-
-Video screencast with the description ot this code:
-https://www.youtube.com/watch?v=BRxp1Kn1G7w
+В репозитории код для тестирования http://wildberries.ru 
 
 
 Files
@@ -18,7 +14,10 @@ of the page in case any test case will fail.
 
 [pages/elements.py](pages/elements.py) contains helper class to define web elements on web pages.
 
-[tests/test_smoke_yandex_market.py](tests/smoke_yandex_market.py) contains several smoke Web UI tests for YandexMarket (https://market.yandex.ru/)
+[tests/test_auth_page.py](tests/test_auth_page.py) тест авторизации в wildberries.ru
+[tests/test_basket.py](tests/test_basket.py) тест корзины
+[tests/test_product.py](tests/test_product.py) тест поиска товаров
+[tests/test_product_card.py](tests/test_product_card.py) тест карточки товара
 
 
 How To Run Tests
